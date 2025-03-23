@@ -6,6 +6,140 @@ import * as handpose from '@tensorflow-models/handpose';
 // Make sure TensorFlow.js is using WebGL backend
 tf.setBackend('webgl');
 
+// Add ASL tips object before the finger position helper functions
+const ASL_TIPS = {
+  A: {
+    position: "Make a fist with thumb resting on the side",
+    common_mistakes: "Don't let fingers spread, keep thumb relaxed",
+    tip: "Think of holding a small ball tightly"
+  },
+  B: {
+    position: "Hold all fingers straight up, thumb tucked",
+    common_mistakes: "Don't spread fingers too wide, keep them together",
+    tip: "Imagine your hand is a flat board"
+  },
+  C: {
+    position: "Curve all fingers and thumb to form C shape",
+    common_mistakes: "Don't make it too tight or too open",
+    tip: "Like holding a small cup"
+  },
+  D: {
+    position: "Index finger up, other fingers together",
+    common_mistakes: "Keep other fingers together, not spread",
+    tip: "Like pointing up to the sky"
+  },
+  E: {
+    position: "Curl all fingers, thumb tucked under",
+    common_mistakes: "Don't let fingers spread while curling",
+    tip: "Like a bird's claw"
+  },
+  F: {
+    position: "Touch thumb to index, other fingers up",
+    common_mistakes: "Keep other fingers straight and together",
+    tip: "Like making the 'OK' sign but with fingers up"
+  },
+  G: {
+    position: "Point index finger to side, thumb out",
+    common_mistakes: "Don't point forward, keep to the side",
+    tip: "Like a gun pointing sideways"
+  },
+  H: {
+    position: "Index and middle finger together, pointing side",
+    common_mistakes: "Keep fingers parallel, not crossed",
+    tip: "Like the number 2 rotated sideways"
+  },
+  I: {
+    position: "Pinky up, other fingers closed",
+    common_mistakes: "Keep other fingers tight in fist",
+    tip: "Like a formal pinky up gesture"
+  },
+  J: {
+    position: "Like I, but trace a J shape",
+    common_mistakes: "Start with pinky up, then trace",
+    tip: "Think of drawing J in the air"
+  },
+  K: {
+    position: "Index and middle up in V, thumb between",
+    common_mistakes: "Don't let fingers touch",
+    tip: "Peace sign with thumb between fingers"
+  },
+  L: {
+    position: "Index up, thumb out to side",
+    common_mistakes: "Keep angle at 90 degrees",
+    tip: "Make a real L shape"
+  },
+  M: {
+    position: "Three fingers over thumb",
+    common_mistakes: "Don't show thumb, keep fingers together",
+    tip: "Like covering thumb with 3 fingers"
+  },
+  N: {
+    position: "Two fingers over thumb",
+    common_mistakes: "Keep fingers together, pointing down",
+    tip: "Like M but with two fingers only"
+  },
+  O: {
+    position: "All fingers curved to meet thumb",
+    common_mistakes: "Make a clear circle, not too tight",
+    tip: "Like making a bubble with your hand"
+  },
+  P: {
+    position: "Point index down, thumb out",
+    common_mistakes: "Keep thumb visible from side",
+    tip: "Like K rotated down"
+  },
+  Q: {
+    position: "Index down at side, thumb out",
+    common_mistakes: "Keep hand vertical",
+    tip: "Like G pointing down"
+  },
+  R: {
+    position: "Cross index and middle finger",
+    common_mistakes: "Keep fingers crossed, not just together",
+    tip: "Like crossing fingers for luck"
+  },
+  S: {
+    position: "Fist with thumb in front of fingers",
+    common_mistakes: "Keep thumb in front, not to side",
+    tip: "Like A but thumb in front"
+  },
+  T: {
+    position: "Thumb between index and middle",
+    common_mistakes: "Keep thumb visible",
+    tip: "Like putting thumb between 2 fingers"
+  },
+  U: {
+    position: "Index and middle up together",
+    common_mistakes: "Keep fingers close and parallel",
+    tip: "Peace sign but fingers together"
+  },
+  V: {
+    position: "Index and middle in V shape",
+    common_mistakes: "Don't make V too wide or narrow",
+    tip: "Classic peace sign"
+  },
+  W: {
+    position: "Index, middle, and ring fingers up",
+    common_mistakes: "Keep fingers spread evenly",
+    tip: "Think of number 3 but spread out"
+  },
+  X: {
+    position: "Hook index finger, other fingers closed",
+    common_mistakes: "Make clear hook shape",
+    tip: "Like holding a tiny hook"
+  },
+  Y: {
+    position: "Thumb and pinky out, others closed",
+    common_mistakes: "Keep thumb and pinky straight",
+    tip: "Like a surfer's 'hang loose' sign"
+  },
+  Z: {
+    position: "Index finger traces Z shape",
+    common_mistakes: "Make clear angles in Z motion",
+    tip: "Draw Z in the air"
+  }
+};
+
 // Finger position helper functions
 const fingerIsOpen = (finger, landmarks) => {
   const tipY = landmarks[finger[3]][1];
@@ -406,6 +540,7 @@ function MainMenu() {
   const [cameras, setCameras] = useState([]);
   const [prediction, setPrediction] = useState(null);
   const [error, setError] = useState(null);
+  const [showTips, setShowTips] = useState(true);  // New state for tips visibility
 
   useEffect(() => {
     async function getCameras() {
@@ -448,7 +583,16 @@ function MainMenu() {
         </div>
 
         <div className="flex-1 bg-white rounded-lg p-6 shadow-lg">
-          <h2 className="text-2xl font-bold mb-6">Output Transcript</h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">Output Transcript</h2>
+            <button
+              className="text-sm text-purple-600 hover:text-purple-800"
+              onClick={() => setShowTips(!showTips)}
+            >
+              {showTips ? 'Hide Tips' : 'Show Tips'}
+            </button>
+          </div>
+          
           {error ? (
             <div className="text-red-500 p-4 rounded-lg bg-red-50">
               {error}
@@ -458,6 +602,16 @@ function MainMenu() {
               <div className="text-4xl font-bold text-center">
                 {prediction.top_prediction}
               </div>
+              {showTips && ASL_TIPS[prediction.top_prediction] && (
+                <div className="mt-4 p-4 bg-purple-50 rounded-lg">
+                  <h3 className="font-semibold text-purple-800">Tips for Letter {prediction.top_prediction}</h3>
+                  <div className="mt-2 space-y-2 text-sm">
+                    <p><span className="font-medium">Position:</span> {ASL_TIPS[prediction.top_prediction].position}</p>
+                    <p><span className="font-medium">Common Mistakes:</span> {ASL_TIPS[prediction.top_prediction].common_mistakes}</p>
+                    <p><span className="font-medium">Tip:</span> {ASL_TIPS[prediction.top_prediction].tip}</p>
+                  </div>
+                </div>
+              )}
               <div className="mt-8 space-y-2">
                 <h3 className="text-lg font-semibold">Top Predictions:</h3>
                 {prediction.predictions.map((pred, index) => (
