@@ -60,9 +60,9 @@ const ASL_TIPS = {
     tip: "Think of drawing J in the air"
   },
   K: {
-    position: "Index and middle up in V, thumb between",
-    common_mistakes: "Don't let fingers touch",
-    tip: "Peace sign with thumb between fingers"
+    position: "Index and middle up, palm facing forward",
+    common_mistakes: "Keep fingers close and parallel",
+    tip: "Peace sign but fingers together"
   },
   L: {
     position: "Index up, thumb out to side",
@@ -242,7 +242,7 @@ const predictASLLetter = (landmarks) => {
   
   // H: Index and middle out to the side
   if (pos.indexFinger && pos.middleFinger && !pos.ringFinger && !pos.pinky &&
-      Math.abs(pos.indexAngle) > 45) {
+      Math.abs(pos.indexAngle) > 45 && Math.abs(pos.indexX - pos.middleX) < 10) {
     return { letter: 'H' };
   }
   
@@ -257,9 +257,9 @@ const predictASLLetter = (landmarks) => {
     return { letter: 'J' };
   }
   
-  // K: Index and middle up, palm facing forward
+  // K: Index and middle up in V, thumb between
   if (pos.indexFinger && pos.middleFinger && !pos.ringFinger && !pos.pinky &&
-      Math.abs(pos.indexX - pos.middleX) > 20) {
+      Math.abs(pos.indexX - pos.middleX) > 20 && Math.abs(pos.thumbAngle) < 45) {
     return { letter: 'K' };
   }
   
@@ -322,9 +322,9 @@ const predictASLLetter = (landmarks) => {
     return { letter: 'U' };
   }
   
-  // V: Index and middle in V shape
+  // V: Index and middle up, other fingers down
   if (pos.indexFinger && pos.middleFinger && !pos.ringFinger && !pos.pinky &&
-      Math.abs(pos.indexX - pos.middleX) > 20) {
+      Math.abs(pos.indexX - pos.middleX) > 20 && Math.abs(pos.thumbAngle) > 45) {
     return { letter: 'V' };
   }
   
