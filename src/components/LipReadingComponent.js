@@ -7,7 +7,9 @@ function LipReadingComponent({ onMouthMovementDetected }) {
   const canvasRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const modelRef = useRef(null);
+  const [debugInfo, setDebugInfo] = useState('');
+  const detectorRef = useRef(null);
+  const animationFrameRef = useRef(null);
 
   useEffect(() => {
     setupCamera();
@@ -17,110 +19,202 @@ function LipReadingComponent({ onMouthMovementDetected }) {
         const tracks = videoRef.current.srcObject.getTracks();
         tracks.forEach(track => track.stop());
       }
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
   }, []);
 
   const loadModel = async () => {
     try {
+      setDebugInfo('Loading face detection model...');
+      // Initialize TensorFlow.js
+      await tf.setBackend('webgl');
+      await tf.ready();
+      
       const model = faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh;
       const detectorConfig = {
         runtime: 'tfjs',
         refineLandmarks: true,
+        maxFaces: 1,
       };
-      modelRef.current = await faceLandmarksDetection.createDetector(
+      
+      detectorRef.current = await faceLandmarksDetection.createDetector(
         model,
         detectorConfig
       );
+      
       setIsLoading(false);
-      detectMouthMovement();
+      setDebugInfo('Model loaded successfully');
     } catch (err) {
-      console.error("Error loading face detection model:", err);
-      setError("Failed to load face detection model");
-      setIsLoading(false);
+      setError('Failed to load face detection model');
+      setDebugInfo('Error loading model: ' + err.message);
+      console.error('Error loading model:', err);
     }
   };
 
   const setupCamera = async () => {
     try {
+      setDebugInfo('Setting up camera...');
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user' }
+        video: { 
+          facingMode: 'user',
+          width: { ideal: 640 },
+          height: { ideal: 480 }
+        }
       });
+      
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        await new Promise((resolve) => {
+          videoRef.current.onloadedmetadata = resolve;
+        });
+        
+        if (canvasRef.current) {
+          canvasRef.current.width = videoRef.current.videoWidth;
+          canvasRef.current.height = videoRef.current.videoHeight;
+          setDebugInfo(`Camera setup complete. Resolution: ${videoRef.current.videoWidth}x${videoRef.current.videoHeight}`);
+        }
       }
     } catch (err) {
-      console.error("Error accessing camera:", err);
-      setError("Failed to access camera");
-      setIsLoading(false);
+      setError('Failed to access camera');
+      setDebugInfo('Error accessing camera: ' + err.message);
+      console.error('Error accessing camera:', err);
     }
   };
 
   const detectMouthMovement = async () => {
-    if (!modelRef.current || !videoRef.current || !canvasRef.current || isLoading) return;
+    if (!detectorRef.current || !videoRef.current || !canvasRef.current) {
+      const msg = 'Detector or video/canvas not ready';
+      console.log(msg);
+      setDebugInfo(msg);
+      return;
+    }
 
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    try {
+      // Get video frame
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
 
-    // Set canvas size to match video
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+      // Draw video frame
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const detect = async () => {
-      if (!modelRef.current || !videoRef.current || !canvasRef.current) return;
+      // Detect faces
+      const msg = 'Attempting face detection...';
+      console.log(msg);
+      setDebugInfo(msg);
+      
+      const faces = await detectorRef.current.estimateFaces(video, {
+        flipHorizontal: false,
+        staticMode: false,
+        returnTensors: false,
+      });
 
-      try {
-        // Detect face landmarks
-        const faces = await modelRef.current.estimateFaces({
-          input: video,
-          returnTensors: false,
-          flipHorizontal: false,
+      const faceMsg = `Found ${faces.length} faces`;
+      console.log(faceMsg);
+      setDebugInfo(faceMsg);
+
+      if (faces.length > 0) {
+        const face = faces[0];
+        const confidenceMsg = `Face detected! Confidence: ${(face.score * 100).toFixed(2)}%`;
+        console.log(confidenceMsg);
+        setDebugInfo(confidenceMsg);
+
+        // Log total number of keypoints
+        const keypointsMsg = `Total keypoints: ${face.keypoints.length}`;
+        console.log(keypointsMsg);
+        setDebugInfo(prev => `${prev}\n${keypointsMsg}`);
+
+        // Get lip landmarks
+        const outerLip = face.keypoints.slice(61, 69);
+        const innerLip = face.keypoints.slice(78, 84);
+
+        // Log lip landmark positions
+        const lipMsg = `Outer lip points: ${outerLip.length}\nInner lip points: ${innerLip.length}`;
+        console.log(lipMsg);
+        setDebugInfo(prev => `${prev}\n${lipMsg}`);
+
+        // Draw all face landmarks for debugging
+        ctx.fillStyle = 'blue';
+        face.keypoints.forEach((point, index) => {
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, 1, 0, 2 * Math.PI);
+          ctx.fill();
+          
+          // Draw landmark numbers
+          ctx.fillStyle = 'white';
+          ctx.font = '8px Arial';
+          ctx.fillText(index, point.x + 2, point.y + 2);
         });
 
-        if (faces.length > 0) {
-          const face = faces[0];
-          
-          // Get lip landmarks (indices 61-68 for outer lip, 78-83 for inner lip)
-          const outerLip = face.keypoints.slice(61, 69);
-          const innerLip = face.keypoints.slice(78, 84);
+        // Draw outer lip landmarks
+        ctx.fillStyle = 'red';
+        outerLip.forEach((point, index) => {
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, 3, 0, 2 * Math.PI);
+          ctx.fill();
+          // Log outer lip point coordinates
+          setDebugInfo(prev => `${prev}\nOuter lip ${index}: (${point.x.toFixed(1)}, ${point.y.toFixed(1)})`);
+        });
 
-          // Calculate mouth openness
-          const upperLip = outerLip[2];
-          const lowerLip = outerLip[6];
-          const mouthOpenness = Math.abs(upperLip.y - lowerLip.y);
+        // Draw inner lip landmarks
+        ctx.fillStyle = 'green';
+        innerLip.forEach((point, index) => {
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, 3, 0, 2 * Math.PI);
+          ctx.fill();
+          // Log inner lip point coordinates
+          setDebugInfo(prev => `${prev}\nInner lip ${index}: (${point.x.toFixed(1)}, ${point.y.toFixed(1)})`);
+        });
 
-          // Detect significant mouth movement
-          const threshold = 10; // Adjust this threshold as needed
-          const isMouthMoving = mouthOpenness > threshold;
+        // Calculate mouth openness
+        const upperLip = outerLip[2];
+        const lowerLip = outerLip[6];
+        const mouthOpenness = Math.abs(upperLip.y - lowerLip.y);
+        const threshold = 10;
+        const isMouthMoving = mouthOpenness > threshold;
 
-          // Draw face mesh
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          
-          // Draw lip landmarks
-          ctx.fillStyle = isMouthMoving ? 'red' : 'green';
-          outerLip.forEach(point => {
-            ctx.beginPath();
-            ctx.arc(point.x, point.y, 2, 0, 2 * Math.PI);
-            ctx.fill();
-          });
+        // Log mouth openness calculation
+        const mouthMsg = `Mouth openness: ${mouthOpenness.toFixed(1)}\nThreshold: ${threshold}\nStatus: ${isMouthMoving ? 'Moving' : 'Still'}`;
+        console.log(mouthMsg);
+        setDebugInfo(prev => `${prev}\n${mouthMsg}`);
 
-          // Notify parent component about mouth movement
-          onMouthMovementDetected(isMouthMoving);
-        }
-      } catch (err) {
-        console.error("Error detecting mouth movement:", err);
+        // Draw mouth openness indicator
+        ctx.fillStyle = isMouthMoving ? 'red' : 'green';
+        ctx.font = '16px Arial';
+        ctx.fillText(`Mouth Openness: ${mouthOpenness.toFixed(1)}`, 10, 30);
+        ctx.fillText(`Threshold: ${threshold}`, 10, 50);
+        ctx.fillText(`Status: ${isMouthMoving ? 'Moving' : 'Still'}`, 10, 70);
+
+        onMouthMovementDetected(isMouthMoving);
+      } else {
+        const noFaceMsg = 'No face detected. Please position your face in front of the camera.';
+        console.log(noFaceMsg);
+        setDebugInfo(noFaceMsg);
       }
+    } catch (err) {
+      console.error('Error detecting mouth movement:', err);
+      const errorMsg = `Error during detection: ${err.message}`;
+      setDebugInfo(prev => `${prev}\n${errorMsg}`);
+    }
 
-      // Continue detection loop
-      requestAnimationFrame(detect);
-    };
-
-    detect();
+    animationFrameRef.current = requestAnimationFrame(detectMouthMovement);
   };
 
+  useEffect(() => {
+    if (!isLoading && !error) {
+      detectMouthMovement();
+    }
+  }, [isLoading, error]);
+
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return (
+      <div className="text-red-500 p-4 rounded-lg bg-red-50">
+        {error}
+      </div>
+    );
   }
 
   return (
@@ -130,7 +224,6 @@ function LipReadingComponent({ onMouthMovementDetected }) {
         autoPlay
         playsInline
         className="w-full rounded-lg"
-        style={{ transform: 'scaleX(-1)' }}
       />
       <canvas
         ref={canvasRef}
@@ -141,6 +234,10 @@ function LipReadingComponent({ onMouthMovementDetected }) {
           <div className="text-white">Loading face detection model...</div>
         </div>
       )}
+      <div className="mt-4 p-4 bg-black bg-opacity-75 text-white rounded-lg text-sm whitespace-pre-line max-h-48 overflow-y-auto">
+        <div className="font-bold mb-2">Debug Information:</div>
+        {debugInfo}
+      </div>
     </div>
   );
 }

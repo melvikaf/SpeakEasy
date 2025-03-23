@@ -13,13 +13,6 @@ function Home() {
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
           Break down communication barriers with our ASL detection, lip reading, and speech recognition technology.
         </p>
-        <button 
-          onClick={() => navigate('/practice')}
-          className="bg--purple-460 text-black text-lg px-8 py-4 rounded-full font-semibold 
-                   hover:bg-purple-500 transition-all transform hover:scale-105 shadow-lg"
-        >
-          Start Communicating Now
-        </button>
       </div>
 
       {/* Feature cards */}
@@ -67,13 +60,6 @@ function Home() {
           Begin Your Journey
         </button>
       </div>
-
-      <button 
-        onClick={() => navigate('/menu')}
-        className="bg-purple-300 text-white px-6 py-3 rounded-full"
-      >
-        Go to Menu
-      </button>
     </div>
   );
 }
