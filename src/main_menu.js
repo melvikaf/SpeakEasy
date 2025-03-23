@@ -202,155 +202,345 @@ const predictASLLetter = (landmarks) => {
   
   // A: Fist with thumb to the side
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky) {
-    return { letter: 'A', confidence: 87 };
+    return { letter: 'A' };
   }
   
   // B: All fingers up, thumb tucked
   if (pos.indexFinger && pos.middleFinger && pos.ringFinger && pos.pinky) {
-    return { letter: 'B', confidence: 92 };
+    return { letter: 'B' };
   }
   
   // C: Curved hand, like holding a cup
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       pos.indexBent && pos.middleBent && pos.ringBent && pos.pinkyBent) {
-    return { letter: 'C', confidence: 85 };
+    return { letter: 'C' };
   }
   
   // D: Index up, others down
   if (pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky) {
-    return { letter: 'D', confidence: 88 };
+    return { letter: 'D' };
   }
   
   // E: All fingers bent down
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       pos.indexBent && pos.middleBent && pos.ringBent && pos.pinkyBent) {
-    return { letter: 'E', confidence: 86 };
+    return { letter: 'E' };
   }
   
   // F: Index and thumb connected, others up
   if (!pos.indexFinger && pos.middleFinger && pos.ringFinger && pos.pinky &&
       pos.indexBent) {
-    return { letter: 'F', confidence: 84 };
+    return { letter: 'F' };
   }
   
   // G: Index pointing to the side, thumb out
   if (pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       Math.abs(pos.indexAngle) > 45) {
-    return { letter: 'G', confidence: 83 };
+    return { letter: 'G' };
   }
   
   // H: Index and middle out to the side
   if (pos.indexFinger && pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       Math.abs(pos.indexAngle) > 45) {
-    return { letter: 'H', confidence: 82 };
+    return { letter: 'H' };
   }
   
   // I: Pinky up only
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && pos.pinky) {
-    return { letter: 'I', confidence: 88 };
+    return { letter: 'I' };
   }
   
   // J: Like I but with a motion (simplified to pinky out to side)
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && pos.pinky &&
       Math.abs(pos.indexAngle) > 45) {
-    return { letter: 'J', confidence: 80 };
+    return { letter: 'J' };
   }
   
   // K: Index and middle up, palm facing forward
   if (pos.indexFinger && pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       Math.abs(pos.indexX - pos.middleX) > 20) {
-    return { letter: 'K', confidence: 85 };
+    return { letter: 'K' };
   }
   
   // L: L-shape with index and thumb
   if (pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       Math.abs(pos.thumbAngle - pos.indexAngle) > 60) {
-    return { letter: 'L', confidence: 89 };
+    return { letter: 'L' };
   }
   
   // M: Three fingers over thumb
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       pos.indexBent && pos.middleBent && pos.ringBent) {
-    return { letter: 'M', confidence: 84 };
+    return { letter: 'M' };
   }
   
   // N: Two fingers over thumb
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       pos.indexBent && pos.middleBent && !pos.ringBent) {
-    return { letter: 'N', confidence: 83 };
+    return { letter: 'N' };
   }
   
   // O: Rounded O shape
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       pos.indexBent && pos.middleBent && pos.ringBent && pos.pinkyBent) {
-    return { letter: 'O', confidence: 87 };
+    return { letter: 'O' };
   }
   
   // P: Index pointing down, thumb out
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       pos.indexBent) {
-    return { letter: 'P', confidence: 82 };
+    return { letter: 'P' };
   }
   
   // Q: Index down, thumb to side
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       pos.indexBent && Math.abs(pos.thumbAngle) > 45) {
-    return { letter: 'Q', confidence: 81 };
+    return { letter: 'Q' };
   }
   
   // R: Crossed index and middle
   if (pos.indexFinger && pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       Math.abs(pos.indexX - pos.middleX) < 10) {
-    return { letter: 'R', confidence: 84 };
+    return { letter: 'R' };
   }
   
   // S: Fist with thumb in front
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky) {
-    return { letter: 'S', confidence: 86 };
+    return { letter: 'S' };
   }
   
   // T: Index bent, thumb between index and middle
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       pos.indexBent) {
-    return { letter: 'T', confidence: 83 };
+    return { letter: 'T' };
   }
   
   // U: Index and middle parallel up
   if (pos.indexFinger && pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       Math.abs(pos.indexX - pos.middleX) < 20) {
-    return { letter: 'U', confidence: 88 };
+    return { letter: 'U' };
   }
   
   // V: Index and middle in V shape
   if (pos.indexFinger && pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       Math.abs(pos.indexX - pos.middleX) > 20) {
-    return { letter: 'V', confidence: 90 };
+    return { letter: 'V' };
   }
   
   // W: Index, middle, and ring spread
   if (pos.indexFinger && pos.middleFinger && pos.ringFinger && !pos.pinky) {
-    return { letter: 'W', confidence: 87 };
+    return { letter: 'W' };
   }
   
   // X: Index bent hook
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       pos.indexBent) {
-    return { letter: 'X', confidence: 82 };
+    return { letter: 'X' };
   }
   
   // Y: Thumb and pinky out
   if (!pos.indexFinger && !pos.middleFinger && !pos.ringFinger && pos.pinky &&
       Math.abs(pos.thumbAngle) > 45) {
-    return { letter: 'Y', confidence: 85 };
+    return { letter: 'Y' };
   }
   
   // Z: Index drawing Z shape (simplified to index pointing to side)
   if (pos.indexFinger && !pos.middleFinger && !pos.ringFinger && !pos.pinky &&
       Math.abs(pos.indexAngle) > 45) {
-    return { letter: 'Z', confidence: 80 };
+    return { letter: 'Z' };
   }
 
-  return { letter: '?', confidence: 30 };
+  return { letter: '?' };
+};
+
+// Add Emergency Phrases data
+const EMERGENCY_PHRASES = {
+  'HELP': {
+    text: 'I need immediate assistance',
+    color: 'bg-red-100 hover:bg-red-200',
+    icon: '🆘'
+  },
+  'PAIN': {
+    text: 'I am in pain',
+    color: 'bg-orange-100 hover:bg-orange-200',
+    icon: '🤕'
+  },
+  'WATER': {
+    text: 'I need water',
+    color: 'bg-blue-100 hover:bg-blue-200',
+    icon: '💧'
+  },
+  'BATHROOM': {
+    text: 'I need to use the bathroom',
+    color: 'bg-purple-100 hover:bg-purple-200',
+    icon: '🚽'
+  },
+  'MEDICINE': {
+    text: 'I need my medicine',
+    color: 'bg-green-100 hover:bg-green-200',
+    icon: '💊'
+  },
+  'TIRED': {
+    text: 'I am tired',
+    color: 'bg-yellow-100 hover:bg-yellow-200',
+    icon: '😴'
+  }
+};
+
+// Add Practice Mode data
+const DIFFICULTY_LEVELS = {
+  BEGINNER: {
+    letters: ['A', 'B', 'C', 'I', 'O'],
+    description: 'Simple hand shapes, perfect for starting',
+    color: 'bg-green-100 hover:bg-green-200',
+    icon: '🌱'
+  },
+  INTERMEDIATE: {
+    letters: ['D', 'E', 'F', 'K', 'L'],
+    description: 'More complex shapes, good for practice',
+    color: 'bg-yellow-100 hover:bg-yellow-200',
+    icon: '⭐'
+  },
+  ADVANCED: {
+    letters: ['J', 'Q', 'R', 'X', 'Z'],
+    description: 'Challenging letters with motion',
+    color: 'bg-red-100 hover:bg-red-200',
+    icon: '🏆'
+  }
+};
+
+// Emergency Panel Component
+const EmergencyPanel = ({ onPhraseClick }) => {
+  return (
+    <div className="p-4 bg-white rounded-lg shadow-lg">
+      <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+        <span>Quick Communication</span>
+        <span className="text-sm bg-red-100 text-red-800 px-2 py-1 rounded">Emergency</span>
+      </h3>
+      <div className="grid grid-cols-2 gap-3">
+        {Object.entries(EMERGENCY_PHRASES).map(([key, { text, color, icon }]) => (
+          <button
+            key={key}
+            className={`p-3 ${color} rounded-lg text-left transition-all transform hover:scale-102 flex items-center gap-2`}
+            onClick={() => onPhraseClick(text)}
+          >
+            <span className="text-2xl">{icon}</span>
+            <div>
+              <div className="font-semibold">{key}</div>
+              <div className="text-sm text-gray-600">{text}</div>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Practice Mode Component
+const PracticeMode = ({ onLetterSelect, currentPrediction }) => {
+  const [selectedLevel, setSelectedLevel] = useState(null);
+  const [currentLetter, setCurrentLetter] = useState(null);
+  const [score, setScore] = useState(0);
+  const [feedback, setFeedback] = useState(null);
+
+  useEffect(() => {
+    if (currentPrediction && currentLetter) {
+      if (currentPrediction === currentLetter) {
+        setScore(prev => prev + 1);
+        setFeedback({ type: 'success', message: 'Correct! Well done! 🎉' });
+        // Set new letter after a brief delay
+        setTimeout(() => {
+          if (selectedLevel) {
+            const letters = DIFFICULTY_LEVELS[selectedLevel].letters;
+            const newLetter = letters[Math.floor(Math.random() * letters.length)];
+            setCurrentLetter(newLetter);
+            setFeedback(null);
+          }
+        }, 1500);
+      }
+    }
+  }, [currentPrediction, currentLetter]);
+
+  const startPractice = (level) => {
+    setSelectedLevel(level);
+    const letters = DIFFICULTY_LEVELS[level].letters;
+    setCurrentLetter(letters[Math.floor(Math.random() * letters.length)]);
+    setScore(0);
+    setFeedback(null);
+  };
+
+  const resetPractice = () => {
+    setSelectedLevel(null);
+    setCurrentLetter(null);
+    setScore(0);
+    setFeedback(null);
+  };
+
+  return (
+    <div className="p-4 bg-white rounded-lg shadow-lg">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-xl font-bold">Practice Mode</h3>
+        {selectedLevel && (
+          <button
+            onClick={resetPractice}
+            className="text-sm text-purple-600 hover:text-purple-800"
+          >
+            Exit Practice
+          </button>
+        )}
+      </div>
+
+      {!selectedLevel ? (
+        <div className="space-y-3">
+          {Object.entries(DIFFICULTY_LEVELS).map(([level, { description, color, icon }]) => (
+            <button
+              key={level}
+              className={`w-full p-3 ${color} rounded-lg text-left transition-all flex items-center gap-3`}
+              onClick={() => startPractice(level)}
+            >
+              <span className="text-2xl">{icon}</span>
+              <div>
+                <div className="font-semibold">{level}</div>
+                <div className="text-sm text-gray-600">{description}</div>
+              </div>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center">
+          <div className="mb-4">
+            <div className="text-sm text-gray-600">Current Level</div>
+            <div className="font-bold text-lg">{selectedLevel}</div>
+          </div>
+          
+          <div className="mb-6">
+            <div className="text-sm text-gray-600">Score</div>
+            <div className="font-bold text-3xl text-purple-600">{score}</div>
+          </div>
+
+          {currentLetter && (
+            <div className="mb-6">
+              <div className="text-sm text-gray-600">Make this letter</div>
+              <div className="text-6xl font-bold my-4">{currentLetter}</div>
+              {ASL_TIPS[currentLetter] && (
+                <div className="text-sm text-gray-600 bg-purple-50 p-3 rounded">
+                  {ASL_TIPS[currentLetter].tip}
+                </div>
+              )}
+            </div>
+          )}
+
+          {feedback && (
+            <div className={`mt-4 p-3 rounded ${
+              feedback.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+            }`}>
+              {feedback.message}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 };
 
 function CameraComponent({ deviceId, setPrediction, setError }) {
@@ -387,7 +577,6 @@ function CameraComponent({ deviceId, setPrediction, setError }) {
         }
       } catch (err) {
         console.error("Error accessing camera:", err);
-        setError("Camera error: " + err.message);
       }
     }
 
@@ -397,7 +586,6 @@ function CameraComponent({ deviceId, setPrediction, setError }) {
         setHandModel(model);
       } catch (err) {
         console.error("Error loading hand model:", err);
-        setError("Failed to load hand detection model: " + err.message);
       }
     }
     
@@ -414,7 +602,7 @@ function CameraComponent({ deviceId, setPrediction, setError }) {
         clearInterval(predictionIntervalRef.current);
       }
     };
-  }, [deviceId, setError]);
+  }, [deviceId]);
 
   const getBoundingBox = (landmarks) => {
     const xs = landmarks.map(l => l[0]);
@@ -467,7 +655,7 @@ function CameraComponent({ deviceId, setPrediction, setError }) {
         setPrediction({
           top_prediction: prediction.letter,
           predictions: [
-            { letter: prediction.letter, confidence: prediction.confidence }
+            { letter: prediction.letter }
           ]
         });
         
@@ -538,9 +726,14 @@ function CameraComponent({ deviceId, setPrediction, setError }) {
 function MainMenu() {
   const navigate = useNavigate();
   const [cameras, setCameras] = useState([]);
+  const [selectedInputMethod, setSelectedInputMethod] = useState("ASL");
   const [prediction, setPrediction] = useState(null);
   const [error, setError] = useState(null);
-  const [showTips, setShowTips] = useState(true);  // New state for tips visibility
+  const [showTips, setShowTips] = useState(true);
+  const [isRecording, setIsRecording] = useState(false);
+  const [aslTranscript, setAslTranscript] = useState("");
+  const [speechTranscript, setSpeechTranscript] = useState("");
+  const recognition = useRef(null);
 
   useEffect(() => {
     async function getCameras() {
@@ -557,79 +750,208 @@ function MainMenu() {
     getCameras();
   }, []);
 
-  return (
-    <div className="min-h-screen bg-[#F8F8FF] p-8">
-      <button 
-        className="mb-8 px-6 py-2 bg-[#E5CBFF] text-black rounded-full hover:bg-[#D4B3FF] flex items-center gap-2"
-        onClick={() => navigate(-1)}
-      >
-        ← Return
-      </button>
+  useEffect(() => {
+    if ('webkitSpeechRecognition' in window) {
+      recognition.current = new window.webkitSpeechRecognition();
+      recognition.current.continuous = true;
+      recognition.current.interimResults = true;
+      recognition.current.lang = 'en-US';
 
-      <div className="flex gap-8">
-        <div className="flex-1 bg-white rounded-lg p-6 shadow-lg">
-          <h2 className="text-2xl font-bold mb-6">User 1</h2>
-          <div>
-            {cameras.length > 0 ? (
-              <CameraComponent 
-                deviceId={cameras[0].deviceId} 
-                setPrediction={setPrediction}
-                setError={setError}
-              />
-            ) : (
-              <div className="text-red-500">No cameras found</div>
+      recognition.current.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        setSpeechTranscript(transcript);
+      };
+
+      recognition.current.onstart = () => {
+        setIsRecording(true);
+      };
+
+      recognition.current.onend = () => {
+        setIsRecording(false);
+      };
+    } else {
+      console.error('Speech Recognition API is not supported in this browser.');
+    }
+  }, []);
+
+  const startRecording = () => {
+    if (recognition.current) {
+      recognition.current.start();
+    }
+  };
+
+  const stopRecording = () => {
+    if (recognition.current) {
+      recognition.current.stop();
+    }
+  };
+
+  const handleAslPrediction = (prediction) => {
+    setPrediction(prediction);
+    if (prediction?.top_prediction) {
+      setAslTranscript(prev => {
+        const newLetter = prediction.top_prediction;
+        if (prev.slice(-1) !== newLetter) {
+          return prev + newLetter;
+        }
+        return prev;
+      });
+    }
+  };
+
+  const getCurrentTranscript = () => {
+    switch (selectedInputMethod) {
+      case "ASL":
+        return aslTranscript || "Make ASL signs to see the translation here...";
+      case "Speech to Text":
+        return speechTranscript || "Start speaking to see the transcription here...";
+      default:
+        return "Select an input method to begin...";
+    }
+  };
+
+  const getTranscriptTitle = () => {
+    switch (selectedInputMethod) {
+      case "ASL":
+        return "ASL Translation";
+      case "Speech to Text":
+        return "Speech Recognition";
+      default:
+        return "Output Transcript";
+    }
+  };
+
+  const renderOutputContent = () => {
+    if (error) {
+      return (
+        <div className="text-red-500 p-4 rounded-lg bg-red-50">
+          {error}
+        </div>
+      );
+    }
+
+    switch (selectedInputMethod) {
+      case "ASL":
+        return prediction ? (
+          <div className="space-y-4">
+            <div className="text-4xl font-bold text-center">
+              {prediction.top_prediction}
+            </div>
+            {showTips && ASL_TIPS[prediction.top_prediction] && (
+              <div className="mt-4 p-4 bg-purple-50 rounded-lg">
+                <h3 className="font-semibold text-purple-800">Tips for Letter {prediction.top_prediction}</h3>
+                <div className="mt-2 space-y-2 text-sm">
+                  <p><span className="font-medium">Position:</span> {ASL_TIPS[prediction.top_prediction].position}</p>
+                  <p><span className="font-medium">Common Mistakes:</span> {ASL_TIPS[prediction.top_prediction].common_mistakes}</p>
+                  <p><span className="font-medium">Tip:</span> {ASL_TIPS[prediction.top_prediction].tip}</p>
+                </div>
+              </div>
             )}
+          </div>
+        ) : (
+          <div className="text-gray-500 text-center">
+            Click "Start Live Prediction" to begin ASL detection
+          </div>
+        );
+
+      case "Speech to Text":
+        return (
+          <div className="min-h-[200px] p-4 bg-gray-50 rounded-lg">
+            <p className="text-lg text-gray-700 whitespace-pre-wrap">{speechTranscript || "Start speaking to see the transcription here..."}</p>
+            {isRecording && (
+              <div className="mt-4 p-3 bg-green-100 rounded-lg">
+                <p className="text-sm text-green-800">Recording in progress...</p>
+              </div>
+            )}
+          </div>
+        );
+
+      default:
+        return (
+          <div className="text-gray-500 text-center">
+            Select an input method to begin
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white text-gray-800 p-6 md:p-8">
+      <nav className="mb-8">
+        <button 
+          className="bg-purple-300 text-white px-6 py-3 rounded-full hover:bg-purple-400 transition-all transform hover:scale-105"
+          onClick={() => navigate(-1)}
+        >
+          ← Return
+        </button>
+      </nav>
+
+      <div className="flex flex-col md:flex-row gap-8 max-w-6xl mx-auto">
+        <div className="w-full md:w-1/2 bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Input Method</h2>
+          <div className="space-y-4">
+            <select
+              className="w-full p-4 bg-white border-2 border-purple-200 rounded-xl
+                        focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300
+                        text-gray-700 cursor-pointer hover:border-purple-300 transition-all
+                        text-lg font-semibold"
+              value={selectedInputMethod}
+              onChange={(e) => setSelectedInputMethod(e.target.value)}
+            >
+              <option value="ASL">ASL Sign Language</option>
+              <option value="Speech to Text">Speech to Text</option>
+            </select>
+
+            <div className="mt-4">
+              {selectedInputMethod === "ASL" && cameras.length > 0 && (
+                <CameraComponent 
+                  deviceId={cameras[0].deviceId} 
+                  setPrediction={handleAslPrediction}
+                  setError={setError}
+                />
+              )}
+              {selectedInputMethod === "Speech to Text" && (
+          <div>
+                  {!isRecording ? (
+                    <button
+                      onClick={startRecording}
+                      className="w-full py-3 px-6 rounded-full bg-blue-400 text-white font-medium hover:bg-blue-500 transition-all"
+                    >
+                      Start Talking
+                    </button>
+                  ) : (
+                    <button
+                      onClick={stopRecording}
+                      className="w-full py-3 px-6 rounded-full bg-red-400 text-white font-medium hover:bg-red-500 transition-all"
+                    >
+                      Stop Talking
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="flex-1 bg-white rounded-lg p-6 shadow-lg">
+        <div className="w-full md:w-1/2 bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold">Output Transcript</h2>
-            <button
-              className="text-sm text-purple-600 hover:text-purple-800"
-              onClick={() => setShowTips(!showTips)}
-            >
-              {showTips ? 'Hide Tips' : 'Show Tips'}
-            </button>
+            <h2 className="text-3xl font-bold text-gray-900">{getTranscriptTitle()}</h2>
+            {selectedInputMethod === "ASL" && (
+              <button
+                className="text-sm text-purple-600 hover:text-purple-800"
+                onClick={() => setShowTips(!showTips)}
+              >
+                {showTips ? 'Hide Tips' : 'Show Tips'}
+              </button>
+            )}
           </div>
           
-          {error ? (
-            <div className="text-red-500 p-4 rounded-lg bg-red-50">
-              {error}
-            </div>
-          ) : prediction ? (
-            <div className="space-y-4">
-              <div className="text-4xl font-bold text-center">
-                {prediction.top_prediction}
-              </div>
-              {showTips && ASL_TIPS[prediction.top_prediction] && (
-                <div className="mt-4 p-4 bg-purple-50 rounded-lg">
-                  <h3 className="font-semibold text-purple-800">Tips for Letter {prediction.top_prediction}</h3>
-                  <div className="mt-2 space-y-2 text-sm">
-                    <p><span className="font-medium">Position:</span> {ASL_TIPS[prediction.top_prediction].position}</p>
-                    <p><span className="font-medium">Common Mistakes:</span> {ASL_TIPS[prediction.top_prediction].common_mistakes}</p>
-                    <p><span className="font-medium">Tip:</span> {ASL_TIPS[prediction.top_prediction].tip}</p>
-                  </div>
-                </div>
-              )}
-              <div className="mt-8 space-y-2">
-                <h3 className="text-lg font-semibold">Top Predictions:</h3>
-                {prediction.predictions.map((pred, index) => (
-                  <div 
-                    key={index}
-                    className="flex justify-between items-center p-2 bg-gray-50 rounded"
-                  >
-                    <span className="font-medium">Letter {pred.letter}</span>
-                    <span className="text-gray-600">{pred.confidence.toFixed(1)}% confident</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="text-gray-500 text-center">
-              Click "Start Live Prediction" to begin
-            </div>
-          )}
+          <div className="space-y-4">
+            {renderOutputContent()}
+          </div>
         </div>
       </div>
     </div>
