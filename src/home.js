@@ -8,10 +8,10 @@ function Home() {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white text-gray-800 p-6 md:p-8">
       <div className="max-w-6xl mx-auto mb-16 text-center">
         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-          Master Communication with <span className="text-purple-300">SpeakEasy</span>
+          Break Communication  Barriers with <span className="text-purple-300">SpeakEasy</span>
         </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Break down communication barriers with our ASL detection, lip reading, and speech recognition technology.
+          Empowering communication through ASL detection, lip reading, and speech recognition technology
         </p>
       </div>
 
