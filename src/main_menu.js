@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import * as handpose from '@tensorflow-models/handpose';
+import LipReadingComponent from './components/LipReadingComponent';
 
 // Make sure TensorFlow.js is using WebGL backend
 tf.setBackend('webgl');
@@ -596,7 +597,8 @@ function CameraComponent({ deviceId, setPrediction, setError }) {
     return () => {
       window.removeEventListener('resize', updateCanvasDimensions);
       if (videoRef.current?.srcObject) {
-        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+        const tracks = videoRef.current.srcObject.getTracks();
+        tracks.forEach(track => track.stop());
       }
       if (predictionIntervalRef.current) {
         clearInterval(predictionIntervalRef.current);
@@ -734,6 +736,8 @@ function MainMenu() {
   const [aslTranscript, setAslTranscript] = useState("");
   const [speechTranscript, setSpeechTranscript] = useState("");
   const recognition = useRef(null);
+  const [mouthMovementDetected, setMouthMovementDetected] = useState(false);
+  const [lipReadingTranscript, setLipReadingTranscript] = useState("");
 
   useEffect(() => {
     async function getCameras() {
@@ -802,10 +806,19 @@ function MainMenu() {
     }
   };
 
+  const handleMouthMovement = (detected) => {
+    setMouthMovementDetected(detected);
+    if (detected) {
+      setLipReadingTranscript(prev => prev + " [Mouth movement detected]");
+    }
+  };
+
   const getCurrentTranscript = () => {
     switch (selectedInputMethod) {
       case "ASL":
         return aslTranscript || "Make ASL signs to see the translation here...";
+      case "Lip Reading":
+        return lipReadingTranscript || "Lip reading detection will appear here...";
       case "Speech to Text":
         return speechTranscript || "Start speaking to see the transcription here...";
       default:
@@ -817,6 +830,8 @@ function MainMenu() {
     switch (selectedInputMethod) {
       case "ASL":
         return "ASL Translation";
+      case "Lip Reading":
+        return "Lip Reading Detection";
       case "Speech to Text":
         return "Speech Recognition";
       default:
@@ -857,6 +872,18 @@ function MainMenu() {
           </div>
         );
 
+      case "Lip Reading":
+        return (
+          <div className="min-h-[200px] p-4 bg-gray-50 rounded-lg">
+            <p className="text-lg text-gray-700 whitespace-pre-wrap">{lipReadingTranscript || "Lip reading detection will appear here..."}</p>
+            {mouthMovementDetected && (
+              <div className="mt-4 p-3 bg-blue-100 rounded-lg">
+                <p className="text-sm text-blue-800">Mouth movement detected</p>
+              </div>
+            )}
+          </div>
+        );
+
       case "Speech to Text":
         return (
           <div className="min-h-[200px] p-4 bg-gray-50 rounded-lg">
@@ -875,6 +902,29 @@ function MainMenu() {
             Select an input method to begin
           </div>
         );
+    }
+  };
+
+  const handleInputMethodChange = (e) => {
+    const newMethod = e.target.value;
+    setSelectedInputMethod(newMethod);
+    
+    // Reset states based on the new input method
+    switch (newMethod) {
+      case "ASL":
+        setPrediction(null);
+        setError(null);
+        break;
+      case "Lip Reading":
+        setLipReadingTranscript("");
+        setMouthMovementDetected(false);
+        break;
+      case "Speech to Text":
+        setSpeechTranscript("");
+        if (isRecording) {
+          stopRecording();
+        }
+        break;
     }
   };
 
@@ -899,9 +949,10 @@ function MainMenu() {
                         text-gray-700 cursor-pointer hover:border-purple-300 transition-all
                         text-lg font-semibold"
               value={selectedInputMethod}
-              onChange={(e) => setSelectedInputMethod(e.target.value)}
+              onChange={handleInputMethodChange}
             >
               <option value="ASL">ASL Sign Language</option>
+              <option value="Lip Reading">Lip Reading</option>
               <option value="Speech to Text">Speech to Text</option>
             </select>
 
@@ -913,8 +964,13 @@ function MainMenu() {
                   setError={setError}
                 />
               )}
+              {selectedInputMethod === "Lip Reading" && cameras.length > 0 && (
+                <LipReadingComponent 
+                  onMouthMovementDetected={handleMouthMovement}
+                />
+              )}
               {selectedInputMethod === "Speech to Text" && (
-          <div>
+                <div>
                   {!isRecording ? (
                     <button
                       onClick={startRecording}

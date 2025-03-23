@@ -11,7 +11,7 @@ function Home() {
           Master Communication with <span className="text-purple-300">SpeakEasy</span>
         </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Break down communication barriers with our ASL detection and speech recognition technology.
+          Break down communication barriers with our ASL detection, lip reading, and speech recognition technology.
         </p>
         <button 
           onClick={() => navigate('/practice')}
@@ -40,8 +40,8 @@ function Home() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 className="text-xl font-bold mb-2 text-gray-900">Speech Recognition</h3>
-          <p className="text-gray-600">Convert your speech to text in real-time with our advanced speech recognition technology</p>
+          <h3 className="text-xl font-bold mb-2 text-gray-900">Lip Reading</h3>
+          <p className="text-gray-600">Advanced lip movement detection to help understand spoken words through visual cues</p>
         </div>
 
         <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all">
@@ -50,8 +50,8 @@ function Home() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
           </div>
-          <h3 className="text-xl font-bold mb-2 text-gray-900">Easy to Use</h3>
-          <p className="text-gray-600">Simple controls and intuitive interface for seamless communication</p>
+          <h3 className="text-xl font-bold mb-2 text-gray-900">Speech Recognition</h3>
+          <p className="text-gray-600">Convert your speech to text in real-time with our advanced speech recognition technology</p>
         </div>
       </div>
 
@@ -59,7 +59,7 @@ function Home() {
       <div className="bg-gradient-to-r from-purple-400 to--purple-500 rounded-2xl p-8 md:p-12 max-w-6xl mx-auto text-white text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to start communicating?</h2>
         <p className="text-xl text--purple-100 mb-8">Join us in breaking down communication barriers</p>
-        <button 
+        <button
           onClick={() => navigate('/menu')}
           className="bg-white text-purple-400 px-8 py-4 rounded-full font-semibold 
                    hover:bg-purple-50 transition-all transform hover:scale-105 shadow-md"
