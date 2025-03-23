@@ -1,7 +1,43 @@
-import React, { useEffect, useState, useRef } from 'react';
-
 import { useNavigate } from 'react-router-dom';
-import CameraComponent from './CameraComponent';
+import { useState, useEffect, useRef } from 'react';
+import { OpenCvProvider, useOpenCv } from 'opencv-react';
+
+function CameraComponent({ deviceId }) {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    async function setupCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { deviceId: deviceId ? { exact: deviceId } : undefined }
+        });
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (err) {
+        console.error("Error accessing camera:", err);
+      }
+    }
+    
+    setupCamera();
+    
+    // Cleanup function
+    return () => {
+      if (videoRef.current && videoRef.current.srcObject) {
+        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [deviceId]);
+
+  return (
+    <video
+      ref={videoRef}
+      autoPlay
+      playsInline
+      className="w-full h-[300px] object-cover rounded-xl"
+    />
+  );
+}
 
 function MainMenu() {
   const navigate = useNavigate();
@@ -9,7 +45,6 @@ function MainMenu() {
   const [selectedInputMethod, setSelectedInputMethod] = useState("");
   const [transcript, setTranscript] = useState("");
   const [isRecording, setIsRecording] = useState(false);
-  const [mouthMovementDetected, setMouthMovementDetected] = useState(false);
 
   useEffect(() => {
     async function getCameras() {
@@ -21,7 +56,7 @@ function MainMenu() {
         console.error("Error getting cameras:", err);
       }
     }
-
+    
     getCameras();
   }, []);
 
@@ -70,7 +105,7 @@ function MainMenu() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white text-gray-800 p-6 md:p-8">
       <nav className="mb-8">
-        <button
+        <button 
           className="bg-purple-300 text-white px-6 py-3 rounded-full hover:bg-purple-400 transition-all transform hover:scale-105"
           onClick={() => navigate(-1)}
         >
@@ -78,7 +113,9 @@ function MainMenu() {
         </button>
       </nav>
 
+      {/* Split screen container */}
       <div className="flex flex-col md:flex-row gap-8 max-w-6xl mx-auto">
+        {/* Left panel */}
         <div className="w-full md:w-1/2 bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">User</h2>
           <div className="space-y-4">
@@ -96,9 +133,10 @@ function MainMenu() {
               <option value="Speech to Text">Speech to Text</option>
             </select>
 
+            {/* Conditional rendering based on input method */}
             <div className="mt-4">
               {selectedInputMethod === "ASL" || selectedInputMethod === "Lip Reading" ? (
-                cameras.length > 0 && <CameraComponent deviceId={cameras[0].deviceId} onMouthMovementDetected={setMouthMovementDetected} />
+                cameras.length > 0 && <CameraComponent deviceId={cameras[0].deviceId} />
               ) : (
                 <div>
                   {!isRecording ? (
@@ -122,6 +160,7 @@ function MainMenu() {
           </div>
         </div>
 
+        {/* Right panel */}
         <div className="w-full md:w-1/2 bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Output transcript</h2>
           <div className="space-y-4">
@@ -129,7 +168,6 @@ function MainMenu() {
           </div>
         </div>
       </div>
-      
     </div>
   );
 }
