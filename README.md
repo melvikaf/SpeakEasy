@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+# SpeakEasy - ASL Transcriber
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A real-time American Sign Language (ASL) transcription web application using TensorFlow.js and MediaPipe Hands for hand detection and gesture recognition.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Real-time hand detection and tracking
+- ASL letter recognition (A-Z)
+- Visual feedback with hand landmarks
+- Confidence scores for predictions
+- Clean and modern UI
+- Works entirely in the browser (no backend required)
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React.js
+- TensorFlow.js
+- MediaPipe Hands
+- Tailwind CSS
+- React Router
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/SpeakEasy.git
+cd SpeakEasy
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Install dependencies:
+```bash
+npm install
+```
 
-### `npm run build`
+3. Start the development server:
+```bash
+npm start
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Usage
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Navigate to the ASL Transcriber page
+2. Allow camera access when prompted
+3. Click "Start Live Prediction"
+4. Make ASL signs with your hand
+5. See real-time predictions with confidence scores
 
-### `npm run eject`
+## Supported ASL Letters
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The application can recognize all ASL letters (A-Z) with varying confidence levels. Best results are achieved with:
+- Good lighting
+- Clear hand visibility
+- Palm facing the camera
+- Steady hand position
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Contributing
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Feel free to open issues and pull requests for any improvements you'd like to add.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## License
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+MIT License - feel free to use this project for any purpose.
