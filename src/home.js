@@ -5,7 +5,6 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white text-gray-800 p-6 md:p-8">
-      {/* Hero Section */}
       <div className="max-w-6xl mx-auto mb-16 text-center">
         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
           Master Any Language with <span className="text-purple-300">SpeakEasy</span>
